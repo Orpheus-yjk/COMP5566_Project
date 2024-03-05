@@ -1,0 +1,59 @@
+# 目录
+> 1. `readContractSourceCode.py` 选择从Mainnet/Georli/Sepolia浏览器下载5000，5000，3800条Contracts的rawcode，并且拼接成可运行的源代码(少数本地编译有问题但remix上可以编译通过)
+> 2. `readContractABI.py`  选择从Mainnet/Georli/Sepolia浏览器下载5000，5000，3800条Contracts的ABI
+> 3. `[fintech]getBytecode.py` 本地下载的合约源代码进行编译得到bytecode。
+> 4. 其他文件：`data`内是合约地址，`utils`内是库。`[demo]reading_demo`是读取样例。
+> 这是[**_github项目地址 : https://github.com/Orpheus-yjk/COMP5566_Project/tree/main/Download_Contract(on%20etherscan)_**](https://github.com/Orpheus-yjk/COMP5566_Project/tree/main/Download_Contract(on%20etherscan) "从etherscan上读取代码")。
+> 
+
+# 运行方法
+> 1. 运行`read-ContractSourceCode.py`，选择`Mainnet/Georli/Sepolia`，目录下会出现sourcecode\_*net文件夹，打开下有rawcode，purecode，finalcode和multisol_div。finalcode是最终编译来源，multisol_div是将rawcode中若干个完整的.sol文件切分成多个.sol文件。 multisol_div下每个sol file下的external_list.txt存放不属于内部调用的import声明。
+> 2. 运行`readContractABI.py`，选择Mainnet/Georli/Sepolia，目录下会出现ABI\_*net文件夹。
+> 3. 运行`[fintech]getBytecode.py`，会对下载的源代码编译online每隔一段时间收取新下载的文件进行编译。产生successfully_compile，fail_to_compile，和compiled_bytecode。successfully_compile和fail_to_compile存放成功或者失败的源代码，compiled_bytecode存放字节码。fail_to_compile下compile_error_log存放编译错误信息。
+>
+
+**_requirements.txt_**
+```
+pandas==2.0.3
+py-solc-x==1.1.1
+requests==2.31.0
+```
+
+# 编写过程
+## 版本0
+下载了etherscan主网上已经验证过的合约。共5k条。
+下载SourceCode、ABI：使用etherscan api，用requests获取
+调用python solcx. compile_standard，编译sol代码。raw code编译时报错很多。
+source code放在./sourcecode/中，ABI放在./ABI/中。编译过的字节码放在./bytecode/中。
+
+## 改进 1
+1. 对raw code进行修缮，对 转义字符，compile version, SPDX version进行合并。
+2. 对包含多sol文件的raw code，进行代码提取，合并，import只保留外部import，内部import消失。没有根据继承顺序合并，造成了一些编译错误
+
+
+## 改进 2
+
+1. 把包含多sol文件内容的raw code按文件名分开，并且按文件名分开存储。
+2. 根据内部import，决定内容顺序进行代码合并。经过检查大部分代码可以通过remix的编译。
+3. 检测、合并、编译的步骤模块化。
+4. 无法编译的代码放在./difficult/中。编译通过的代码放在./success/中，其字节码放在./bytecode/中。difficult文件夹中包含compile_error_log文件夹，放置编译错误信息。
+
+## 本地运行python进行实时下载和编译  2.24
+大部分本地solc编译能通过。约有850/5000条合约不能在本地编译通过，人工在remix也能编译通过。
+
+## 改动 2.25
+
+规范输出目录结构，如开头所示。
+rawcode：网页请求源代码
+purecode：合并完成，输出到本地目录可以编译的单个`code`文件，没有内部引用。
+multisol_div：子代码存放处
+finalcode：最终编译的代码
+
+
+
+
+
+
+
+
+
