@@ -9,26 +9,11 @@
 > 
 > (4)分析被发现的合同和对手的利润
 
-
-
-### Download_Contract目录下代码文件说明：
-
-Download_Contract(on Etherscan)包含从`Mainnet/Goerli/Sepolia`上下载源代码、ABI、编译源代码的py文件：
-
-`readContractSourceCode.py`，`readContractABI.py`，`[fintech]getBytecode.py`
-
-具体运行方式见其目录下说明。
-
-
-
-调用获取api见：[https://docs.etherscan.io/api-endpoints/contracts](https://docs.etherscan.io/api-endpoints/contracts)。
-
-
-
-~~~python
-# 分割线
+~~~C++
+/*
+log:读取合约，修改属性
+*/
 ~~~
-
 
 
 项目原始论文：
