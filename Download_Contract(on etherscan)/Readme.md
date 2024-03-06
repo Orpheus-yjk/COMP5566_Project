@@ -14,9 +14,9 @@
 
 **_requirements.txt_**
 ```
-pandas==2.0.3
-py-solc-x==1.1.1
-requests==2.31.0
+pandas
+py-solc-x
+requests
 ```
 
 # 编写过程
