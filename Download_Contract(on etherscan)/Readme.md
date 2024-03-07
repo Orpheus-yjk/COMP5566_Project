@@ -12,7 +12,7 @@
 > 3. 运行`[fintech]getBytecode.py`，会对下载的源代码编译online每隔一段时间收取新下载的文件进行编译。产生successfully_compile，fail_to_compile，和compiled_bytecode。successfully_compile和fail_to_compile存放成功或者失败的源代码，compiled_bytecode存放字节码。fail_to_compile下compile_error_log存放编译错误信息。
 >
 
-**_requirements.txt_**   python 3.x  [**可以用清华源** pip install 包名 -i 网址 ](https://pypi.tuna.tsinghua.edu.cn/simple "")。
+**_requirements.txt_**   python 3.x  [**可以用清华源** ](https://pypi.tuna.tsinghua.edu.cn/simple "https://pypi.tuna.tsinghua.edu.cn/simple") pip install 包名 -i 网址 。
 ```
 numpy
 pandas
@@ -20,6 +20,16 @@ requests
 web3
 py-solc-x
 ```
+本地使用anaconda部署python的话，打开anaconda power shell，下列是查看、添加、删除环境命令：
+
+- 输入conda env list 可查看当前存在哪些虚拟环境
+- 输入conda create -n your _env_name python=X.X(版本号) anaconda 命令创建python版本为X.X,名字为your_env_name的虚拟环境
+- 删除环境
+  - 第一步：首先退出环境
+  - conda deactivate
+  - 第二步：删除环境
+  - conda remove -n  需要删除的环境名 --all
+
 
 # 编写过程
 ## 版本0
