@@ -1,5 +1,5 @@
+numpy
 pandas
-
-py-solc-x
-
 requests
+web3
+py-solc-x
