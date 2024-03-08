@@ -23,7 +23,7 @@
 [**_usenix.org_**] The Art of The Scam: Demystifying Honeypots in Ethereum Smart Contracts(2019)
 
 
-对合约分析有关的论文可查阅：(下不来可以在scihub上找)
+分析合约
 
 > **用字节码检测 || bytecode detection：**
 > 
