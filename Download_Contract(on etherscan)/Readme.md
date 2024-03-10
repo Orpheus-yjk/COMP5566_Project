@@ -16,7 +16,7 @@
 
 pip install -r requirements.txt 安装所有依赖库，也可以一个个安装。
 
-[**_可以用清华源_** ](https://pypi.tuna.tsinghua.edu.cn/simple "https://pypi.tuna.tsinghua.edu.cn/simple") pip install 包名 -i _网址_ 。
+[**_可以用清华源_** ](https://pypi.tuna.tsinghua.edu.cn/simple "https://pypi.tuna.tsinghua.edu.cn/simple") pip install 包名 -i [**_网址_** ] 。
 ```
 numpy
 pandas
