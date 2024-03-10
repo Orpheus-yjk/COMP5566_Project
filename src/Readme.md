@@ -1,6 +1,6 @@
-# bytecode detection
-## **Tool**
-**Install on _docker Desktop_ or on _Linux_ if U use _Linux_. Following the instruction in Readme.md .**
+# Bytecode detection
+## **Tools**
+**Install on _docker Desktop_ or on _Linux_ if U use _Linux_. Follow the instruction in the project.**
 
 1. [oyente](https://github.com/enzymefinance/oyente "oyente") (old tool, used by **_paper_:** [The Art of The Scam Demystifying Honeypots in Ethereum Smart Contracts](https://www.usenix.org/system/files/sec19-torres.pdf "The Art of The Scam Demystifying Honeypots in Ethereum Smart Contracts")).
 
