@@ -12,7 +12,11 @@
 > 3. 运行`[fintech]getBytecode.py`，会对下载的源代码编译online每隔一段时间收取新下载的文件进行编译。产生successfully_compile，fail_to_compile，和compiled_bytecode。successfully_compile和fail_to_compile存放成功或者失败的源代码，compiled_bytecode存放字节码。fail_to_compile下compile_error_log存放编译错误信息。
 >
 
-**_requirements.txt_**   python 3.x  [**可以用清华源** ](https://pypi.tuna.tsinghua.edu.cn/simple "https://pypi.tuna.tsinghua.edu.cn/simple") pip install 包名 -i 网址 。
+**_requirements.txt_**   python 3.x
+
+pip install -r requirements.txt 安装所有依赖库，也可以一个个安装。
+
+[**_可以用清华源_** ](https://pypi.tuna.tsinghua.edu.cn/simple "https://pypi.tuna.tsinghua.edu.cn/simple") pip install 包名 -i _网址_ 。
 ```
 numpy
 pandas
