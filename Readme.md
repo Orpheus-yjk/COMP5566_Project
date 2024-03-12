@@ -19,7 +19,8 @@
 ~~~html
 {参与：
 log:
-  
+
+outcome:
 }
 ~~~
 
@@ -27,7 +28,8 @@ log:
 ~~~html
 {参与：
 log:
-  
+
+outcome:
 }
 ~~~
 
@@ -35,7 +37,8 @@ log:
 ~~~html
 {参与：
 log:
-  
+
+outcome:
 }
 ~~~
 
@@ -43,7 +46,8 @@ log:
 ~~~html
 {参与：
 log:
-  
+
+outcome:
 }
 ~~~
 
