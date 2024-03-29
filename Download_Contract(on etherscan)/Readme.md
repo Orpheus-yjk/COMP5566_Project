@@ -67,8 +67,15 @@ purecode：合并完成，输出到本地目录可以编译的单个`code`文件
 multisol_div：子代码存放处
 finalcode：最终编译的代码
 
+## 改动 3.29
+增添了对合约的抽取和重组function。
+finalcode存储去掉注释以后的代码，方便编译通过。
+CodewithDocs存放原来代码。
 
 
+# 工具已经上传
+对于少数程序下载以后编译不了的合约，请手动在Remix上修改成功并采集bytecode。
+然后将正确的代码复制回本地。
 
 
 
