@@ -97,7 +97,6 @@ def reorganize(code):
             counter = counter - 1
             if counter==0:
                 name, type0, dependency0 = do(subcode)
-                # name, type0, dependency0 = do(subcodewithdoc)
                 content_dict[name] = subcode
                 typology[name] = type0
                 dependency[name] = dependency0
