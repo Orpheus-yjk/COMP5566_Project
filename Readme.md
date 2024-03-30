@@ -1,6 +1,6 @@
 # [COMP]5566 Project
 
-### 任务：在以太坊上检测蜜罐合约
+## 任务：在以太坊上检测蜜罐合约
 > 
 > (1)通过收集研究论文、报告和相关的博客，建立一个蜜罐合同的分类法。
 > 
@@ -11,9 +11,7 @@
 > (4)分析被发现的合同和对手的利润
 > 
 
-### **_Deadline: 4.22_**
-
-### Checklist
+#### **_Deadline: 4.22_** Checklist
 
 - [x] 收集论文， 找到合同分类法
 
@@ -29,22 +27,27 @@
 
 ---
 
-### 项目原始论文：
+## **References**
+
+**项目原始论文(2019)**
 
 [**_usenix.org_**] The Art of The Scam: Demystifying Honeypots in Ethereum Smart Contracts(2019)
 
+**基于符号分析(2023)**
 
-### 分析合约
+1. The Greed Trap: Uncovering Intrinsic Ethereum Honeypots through Symbolic Execution(2023)
+2. Honeytoken-Detector: A Symbolic Execution-Based Honeypot Token Detection Tool(2023)
 
-**用字节码检测 || bytecode detection：**
+**基于机器学习(2020-2022)**
 
-1. [**_ieeexplore_**] Machine-learning Approach using Solidity Bytecode for Smart-contract Honeypot Detection in the Ethereum(2021)
-2. [**_ieeexplore_**] SCSGuard: Deep Scam Detection for Ethereum Smart Contracts(2022)
+1. A Data Science Approach for Detecting Honeypots in Ethereum(2020)
+2. Honeypot Contrac Risk Warning on Ethereum Smart Contracts(2020)
+3. Machine-learning Approach using Solidity Bytecode for Smart contract Honeypot Detection in the Ethereum(2021)
+4. An Adversarial Smart Contract Honeypot in Ethereum(2021)
+5. SCSGuard Deep Scam Detection for Ethereum Smart Contracts(2022)
 
-**深度学习方法 || deep learning method：**
-
-1. [**_ieeexplore_**] A Data Science Approach for Detecting Honeypots in Ethereum(2019)
-2. [**_ieeexplore_**] Honeypot Contract Risk Warning on Ethereum Smart Contracts(2020)
+**基于文件的Audit系统**
+1. Ransomware Prevention System Design based on File Symbolic Linking Honeypots(2021)
 
 
 ### 补充说明
