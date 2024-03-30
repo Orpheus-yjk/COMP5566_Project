@@ -112,7 +112,7 @@ def multi_sol_concat(sols_content):
             import_sol = find_single_solname_in_phrase(ele, Enforce_Complete = False)
             if import_sol in sols_content.keys():
                 sol_file_adj[file_name].append(import_sol)
-                # 记录内部调用
+                # 记录内部调用，相当于前向指针
             else:
                 external_import.append(ele) # 储存完整的外部import声明
 
@@ -131,17 +131,14 @@ def multi_sol_concat(sols_content):
             if name in record.keys():
                 if record[name] == False:
                     mycode = dfs(name) + mycode
-        # print("\033[34m这是{}\033[0m".format(file_name))
-        return mycode + sols_content[file_name]  #带绝对路径的import
+                    # name's code 前置于 mycode
+        return mycode + sols_content[file_name]  # mycode前置于本文件的code
 
     newcode = ""
     for file_name in sols_content.keys():
         if record[file_name] == False:
-            newcode = newcode + dfs(file_name)
+            newcode = dfs(file_name) + newcode# code拼接
 
-    # for file_name in sol_file_adj.keys():
-    #     print("\033[31m{} 引用的头文件是\033[0m: ".format(file_name))
-    #     print(sol_file_adj[file_name])
     return newcode, unique_flag, external_import
     # 还需要修改整个代码里的import 和 SPDX 的重复声明
 
@@ -174,7 +171,7 @@ def regulate_code_import(code, unique_flag, external_import, remain_ex_path=Fals
                 # wripped out
             elif (import_sol in external_import) and remain_ex_path:  # 外部调用(openzeppelin 或者 http: import声明等)保留完整
                 code = code
-            else:
+            else:   # 内部调用
                 if remain_in_path:
                     code = code.replace(ele, "import ./"+import_sol+";\n")    # 内部声明截取
                 else:
@@ -182,6 +179,10 @@ def regulate_code_import(code, unique_flag, external_import, remain_ex_path=Fals
     return code
 
 def main_regulate_source_code(code, name, contract_address, Net):
+    '''
+
+    '''
+
     '''
     1. remove ^ in  pragma solidity ^
     '''
@@ -196,10 +197,6 @@ def main_regulate_source_code(code, name, contract_address, Net):
     except Exception as e:
         print("\033[33m{}\n{}\n\033[0m".format("Source code Encode ERROR:",e))
         # 这是黄色字体
-    code=code.replace("\\n","\n")
-    code=code.replace("\\r","\r")
-    code=code.replace("\\\"","\"")
-    # remove \n & \r & \"
 
     '''
     2. comcat all .sol files
@@ -277,7 +274,7 @@ def main_regulate_source_code(code, name, contract_address, Net):
         SPDX_version_list.append(SPDX_version)
 
     '''
-    5. final regulation : add SPDX, compile version, import;
+    5. final regulation : add SPDX, compile version, and import;
     '''
     for version in SPDX_version_list:
         if newcode.find("SPDX-License-Identifier: ".format(version)) != -1:
@@ -290,17 +287,19 @@ def main_regulate_source_code(code, name, contract_address, Net):
     # 2. delete multi annoucement of compile version in .sol files
 
     newcode = regulate_code_import(newcode, unique_flag, external_import, remain_ex_path=False, remain_in_path=False)
+    # 丢弃外部声明的绝对路径（编译时可尝试在本地库查找），丢弃内部路径合n为1
     # 3. delete multi annoucement of import in .sol files AND do Diamond Inheritance
 
-    newcode = "pragma solidity {};".format(compile_version) + '\n\n' + newcode
-    # add compile version in front
-    newcode = "// SPDX-License-Identifier: {}\n\n".format(SPDX_version) + newcode
-    # add SPDX license in front
-    while newcode.find("\n\n\n")!=-1:
-        newcode = newcode.replace("\n\n\n", "\n\n")
-    # leave out blank line
 
-    if IsMultiSol:
+    newcode_header = ""
+    newcode_header = "//Contract Name: {}\n//Contract Address: {}\n".format(name,contract_address) + newcode_header
+    # add Contract name & addr in front
+    newcode_header = "pragma solidity {};".format(compile_version) + '\n\n' + newcode_header
+    # add compile version in front
+    newcode_header = "// SPDX-License-Identifier: {}\n\n".format(SPDX_version) + newcode_header
+    # add SPDX license in front
+
+    if IsMultiSol:  # 输出子文件，子文件是含有内部&外部import路径的
         path = "./sourcecode_{}/multisol_div/{}({})".format(Net,name,contract_address)
         if not os.path.exists(path):
             os.makedirs(path)
@@ -308,7 +307,7 @@ def main_regulate_source_code(code, name, contract_address, Net):
             try:
                 data = open("./sourcecode_{}/multisol_div/{}({})/{}".format(Net,name,contract_address,file_name), 'w', encoding='utf-8')
                 printcode = regulate_code_import(sols_content[file_name], unique_flag, external_import, remain_ex_path=True, remain_in_path=True)
-                # 进而规范子文件的import声明
+                # 进而规范子文件的import声明，保留外部声明，保留内部声明
                 while printcode.find("\n\n\n") != -1:
                     printcode = printcode.replace("\n\n\n", "\n\n")
                 # leave out blank line
@@ -319,5 +318,5 @@ def main_regulate_source_code(code, name, contract_address, Net):
         data = open("./sourcecode_{}/multisol_div/{}({})/external-list.txt".format(Net,name,contract_address),"a",encoding="utf-8")
         print(external_import, file=data)  #输出外部调用
         data.close()
-    return newcode
+    return newcode_header, newcode
 
