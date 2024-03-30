@@ -10,11 +10,6 @@ def getfiles(dir):
     return filenames
 
 
-crtid = 0
-timecost = []
-costsum = 0
-failed_sol = []
-
 if not os.path.exists("./compiled_bytecode"):
     os.makedirs("./compiled_bytecode")
 
@@ -31,6 +26,16 @@ if not os.path.exists("./fail_to_compile/compile_error_log"):
     os.makedirs("./fail_to_compile/compile_error_log")
 
 oldlist = getfiles('./fail_to_compile/') + getfiles('./successfully_compile/')
+
+all_compile_version=[]
+for ver in open("./allcompileversion.txt"):
+    all_compile_version.append(ver)
+
+crtid = 0
+timecost = []
+costsum = 0
+failed_sol = []
+
 
 tmp = getfiles("./")
 CodePath = ""
@@ -53,8 +58,6 @@ while True:
         t0 = time.time()
         print("\n\n【contract NO.】：{} ".format(crtid))
         print("Contract Name: {}".format(name))
-
-        print("Name = ", Name)
 
         with open(CodePath+"/finalcode/"+Name, "r",encoding='utf-8') as f:  # 打开文件
             data = f.read()  # 读取文件
@@ -81,22 +84,49 @@ while True:
         w3 = Web3(Web3.HTTPProvider("HTTP://127.0.0.1:8545"))
 
         beg = source_code.find("pragma solidity ")
-        if beg == -1:   # 没有compile version
-            print("FAIL!!")
-            failed_sol.append(name)
-            data = open("./fail_to_compile/{}".format(Name), 'w', encoding='utf-8')
-            print(source_code, file=data)
-            data.close()
-            data = open("./fail_to_compile/compile_error_log/{}".format(Name), 'w', encoding='utf-8')
-            print("No Content", file=data)
-            data.close()
-            continue
-        
-        compile_version = source_code[beg + 16 : source_code.find(";", beg, len(source_code))]
-        while compile_version[0]<'0' or compile_version[0]>'9': compile_version = compile_version[1:]
-        while compile_version[-1]<'0' or compile_version[-1]>'9': compile_version = compile_version[:-1]
-        print("compile version == {}".format(compile_version))
-        # pragma solidity 0.x.y; find compile version
+        if beg == -1:  # 没有compile version
+            compile_version = "0.8.0" # default
+            source_code = "pragma solidity ^" + compile_version + ";\n\n" + source_code
+        else:
+            compile_version = source_code[beg + 16: source_code.find(";", beg, len(source_code))]
+            while compile_version[0] < '0' or compile_version[0] > '9': compile_version = compile_version[1:]
+            while compile_version[-1] < '0' or compile_version[-1] > '9': compile_version = compile_version[:-1]
+
+            if compile_version.find("=") != -1:  # >= > <
+                idx = compile_version.find("=") + 1
+                sub = ""
+                while (compile_version[idx] >= "0" and compile_version[idx] <= "9") or compile_version[idx] == ".":
+                    sub = sub + compile_version[idx]
+                    idx = idx + 1
+                source_code = source_code.replace("pragma solidity ^" + compile_version, "pragma solidity ^" + sub)
+                compile_version = sub
+
+            elif compile_version.find(">") != -1:
+                idx = compile_version.find(">") + 1
+                sub = ""
+                while (compile_version[idx] >= "0" and compile_version[idx] <= "9") or compile_version[idx] == ".":
+                    sub = sub + compile_version[idx]
+                    idx = idx + 1
+                for j in range(0, len(all_compile_version)):
+                    if sub == all_compile_version[j]:
+                        compile_version = all_compile_version[j + 1]
+                        break
+                source_code = source_code.replace("pragma solidity ^" + compile_version, "pragma solidity ^" + sub)
+                compile_version = sub
+            elif compile_version.find(">") != -1:
+                idx = compile_version.find("<") + 1
+                sub = ""
+                while (compile_version[idx] >= "0" and compile_version[idx] <= "9") or compile_version[idx] == ".":
+                    sub = sub + compile_version[idx]
+                    idx = idx + 1
+                for j in range(0, len(all_compile_version)):
+                    if sub == all_compile_version[j]:
+                        compile_version = all_compile_version[j - 1]
+                        break
+                source_code = source_code.replace("pragma solidity ^" + compile_version, "pragma solidity ^" + sub)
+                compile_version = sub
+            print("compile version == {}".format(compile_version))
+            # pragma solidity 0.x.y; find compile version
 
         # compile code to bytecode
         if os.path.exists(CodePath+"/multisol_div/{}".format(name)):
@@ -104,7 +134,23 @@ while True:
             # 有本地文件
         else:
             paths = ["./utils/node_modules"]
-        shortname = name[:name.find("(")]   # shortname is used instead of name " xxxx(0x...)" to prevent compile error
+
+        # compile code to bytecode
+        shortname = ""  # shortname is used instead of name " xxxx(0x...)" to prevent compile error
+        for j in range(0, len(name)):
+            if (name[j] >= "0" and name[j] <= "9") or (name[j] >= "A" and name[j] <= "Z") or (
+                    name[j] >= "a" and name[j] <= "z"):
+                shortname = shortname + name[j]
+            else:
+                break
+
+        # if source_code.find("contract "+ shortname)==-1:
+        #     source_code = source_code + "\n\n" + "contract "+ format(shortname) + "{}"
+        ## 类似主函数，缺了要加上
+        ### 但是还不够，除了不能带有下划线的文件名，必须没有带下划线的contract名才行，并且文件名必须出现在contract中，这需要手动改
+        ### 否则我只能抽取contarct名，改带下划线的contract名，重新取文件名，编译之后移花接木
+        ### 移花接木在autocompile里面专门做这个事情
+
         try:
             install_solc(compile_version)
             compiled_sol = compile_standard(
