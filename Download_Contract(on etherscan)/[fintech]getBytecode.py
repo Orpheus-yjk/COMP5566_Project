@@ -197,7 +197,6 @@ while True:
             print(e, file=data)
             data.close()
 
-        exit(0)
         t1=time.time()
         print("编译以及输出本Contract Bytecode花费了(时间s)：{}".format(t1-t0))
         timecost.append(t1-t0)
