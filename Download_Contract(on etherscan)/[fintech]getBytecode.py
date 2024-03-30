@@ -138,18 +138,23 @@ while True:
         # compile code to bytecode
         shortname = ""  # shortname is used instead of name " xxxx(0x...)" to prevent compile error
         for j in range(0, len(name)):
-            if (name[j] >= "0" and name[j] <= "9") or (name[j] >= "A" and name[j] <= "Z") or (
-                    name[j] >= "a" and name[j] <= "z"):
+            if (name[j] >= "0" and name[j] <= "9") or (name[j] >= "A" and name[j] <= "Z") or (name[j] >= "a" and name[j] <= "z") or name[j]=="$":   # $是一个奇怪的符号
                 shortname = shortname + name[j]
             else:
+                if shortname=="":continue
                 break
-
+        if len(shortname)<=3:
+            import random
+            import string
+            sub = sub + 'oTo'.join(random.sample(string.ascii_letters + string.digits, 3))
         # if source_code.find("contract "+ shortname)==-1:
         #     source_code = source_code + "\n\n" + "contract "+ format(shortname) + "{}"
         ## 类似主函数，缺了要加上
         ### 但是还不够，除了不能带有下划线的文件名，必须没有带下划线的contract名才行，并且文件名必须出现在contract中，这需要手动改
         ### 否则我只能抽取contarct名，改带下划线的contract名，重新取文件名，编译之后移花接木
         ### 移花接木在autocompile里面专门做这个事情
+
+        print("\n\n【contract NO.】：{} ".format(crtid))
 
         try:
             install_solc(compile_version)
@@ -192,7 +197,7 @@ while True:
             print(e, file=data)
             data.close()
 
-
+        exit(0)
         t1=time.time()
         print("编译以及输出本Contract Bytecode花费了(时间s)：{}".format(t1-t0))
         timecost.append(t1-t0)
