@@ -245,7 +245,7 @@ def main_regulate_source_code(code, name, contract_address, Net):
 
     if len(compile_version_list) > 0:
         compile_version = compile_version_list[0]
-        print("compile version == {}".format(compile_version))
+        print("\033[31mcompile version : {}\033[0m".format(compile_version))
     else:
         compile_version = "0.8.0"
         compile_version_list.append(compile_version)
@@ -256,15 +256,15 @@ def main_regulate_source_code(code, name, contract_address, Net):
     SPDX_version_list = []
     for i in range(0, len(newcode) - 1):
         examstr = examstr + newcode[i]
-        if len(examstr) > len("SPDX-License-Identifier: "): examstr = examstr[1:]
+        if len(examstr) > len("SPDX-License-Identifier:"): examstr = examstr[1:]
         SPDX_version = ""
-        if examstr == "SPDX-License-Identifier: ":
+        if examstr == "SPDX-License-Identifier:":
             idx = i + 1
             while idx < len(newcode):
                 if newcode[idx] == '\n': break
                 SPDX_version = SPDX_version + newcode[idx]
                 idx = idx + 1
-            SPDX_version_list.append(SPDX_version)
+            SPDX_version_list.append(SPDX_version)  # 可能含空格也可能不含
         i = i + len(SPDX_version) - 1
 
     if len(SPDX_version_list) > 0:
@@ -277,8 +277,8 @@ def main_regulate_source_code(code, name, contract_address, Net):
     5. final regulation : add SPDX, compile version, and import;
     '''
     for version in SPDX_version_list:
-        if newcode.find("SPDX-License-Identifier: ".format(version)) != -1:
-            newcode = newcode.replace("SPDX-License-Identifier: {}".format(version), '')
+        if newcode.find("SPDX-License-Identifier:".format(version)) != -1:
+            newcode = newcode.replace("SPDX-License-Identifier:{}".format(version), '')
     # 1. delete multi SPDX annoucement
 
     for version in compile_version_list:
