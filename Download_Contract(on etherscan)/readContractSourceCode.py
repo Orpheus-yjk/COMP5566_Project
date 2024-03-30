@@ -200,7 +200,7 @@ for (contract_address,name) in zip(contract_address_list, contract_names):
         #     exit(0)
     except Exception as e:
         print("Reason: ",e)
-    print("【累计用时 {}/{}】：{}s".format(crtid, N, costsum))
+    print("累计用时 {}/{}：{}s".format(crtid, N, costsum))
 
 print("【总用时】：{}".format(costsum))
 
