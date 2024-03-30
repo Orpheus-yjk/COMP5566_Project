@@ -10,7 +10,7 @@
 > 1. 运行`read-ContractSourceCode.py`，选择`Mainnet/Georli/Sepolia`，目录下会出现sourcecode\_*net文件夹，打开下有rawcode，purecode，finalcode和multisol_div。finalcode是最终编译来源，multisol_div是将rawcode中若干个完整的.sol文件切分成多个.sol文件。 multisol_div下每个sol file下的external_list.txt存放不属于内部调用的import声明。
 > 2. 运行`readContractABI.py`，选择Mainnet/Georli/Sepolia，目录下会出现ABI\_*net文件夹。
 > 3. 运行`[fintech]getBytecode.py`，会对下载的源代码编译online每隔一段时间收取新下载的文件进行编译。产生successfully_compile，fail_to_compile，和compiled_bytecode。successfully_compile和fail_to_compile存放成功或者失败的源代码，compiled_bytecode存放字节码。fail_to_compile下compile_error_log存放编译错误信息。
->
+> 3.29上传以后，finalcode文件夹改成存放去除所有注释的代码，此外另一个目录CodewithDocs存放含有注释的代码。
 
 python 3.x
 
