@@ -4,7 +4,8 @@ import pandas as pd
 import requests
 import time
 import os
-from utils.regulate_source_code import find_single_solname_in_phrase, multi_sol_div, multi_sol_concat, multi_sol_fix, regulate_code_import, main_regulate_source_code
+from utils.regulate_source_code import main_regulate_source_code
+from utils.plus import reorganize
 
 Net = ""
 while Net == "":
@@ -24,7 +25,8 @@ df = pd.read_csv('./data/export-verified-contractaddress-opensource-license({}).
 N = len(df)
 # N = 1000
 
-last_N = df[-N:].copy()
+delta = 0
+last_N = df[-N+delta:].copy()
 # 后1000条
 
 YourApiKeyToken="FQXNEMBZ59ZG95A6KKXNUIWESBUWTBT82F"
@@ -48,10 +50,10 @@ for (contract_address,name) in zip(contract_address_list, contract_names):
     t0=time.time()
     if Net == "Mainnet":
         url = ('https://api.etherscan.io/api'+
-           '?module={}'+
-           '&action={}'+
-           '&address={}'+
-           '&apikey={}').format(module, action, contract_address, YourApiKeyToken)
+               '?module={}'+
+               '&action={}'+
+               '&address={}'+
+               '&apikey={}').format(module, action, contract_address, YourApiKeyToken)
     elif Net == "Goerli":
         url = ('https://api-goerli.etherscan.io/api' +
                '?module={}' +
@@ -81,7 +83,9 @@ for (contract_address,name) in zip(contract_address_list, contract_names):
     print(response.text)		# 获取响应内容
     '''
 
-    content = response.text.encode(response.encoding).decode('utf-8')  #去除unicode乱码
+    content = response.text.encode(response.encoding).decode('utf-8')  # 格式化unicode，去除unicode乱码
+
+
     try:
         text_dict=eval(content)
         # 响应内容-字符串转换为字典
@@ -97,32 +101,103 @@ for (contract_address,name) in zip(contract_address_list, contract_names):
         print(source_code_list, file=rawcodewritter)
         rawcodewritter.close()
 
-        purecode = ""
-        print("\n\n【contract NO.{}】".format(crtid))
-        for ele in source_code_list:
-            print("contract name: {}({})".format(name,contract_address))
-            piece_of_code=ele["SourceCode"]
-            purecode = purecode + piece_of_code
         ###
         ### 2、输出出去以后的.sol代码合集
         ###
         path = "./sourcecode_{}/purecode".format(Net)
         if not os.path.exists(path):
             os.makedirs(path)
-        writter2 = open("./sourcecode_{}/purecode/{}({}).txt".format(Net, name,contract_address),"w", encoding="utf-8")
-        print(purecode, file=writter2)
-        writter2.close()
+        purecode = ""
+        print("\n\n【contract NO.{}】".format(crtid+delta))
+        for ele in source_code_list:
+            print("contract name: {}({})".format(name,contract_address))
+            piece_of_code=ele["SourceCode"]
+
+            # remove \n & \r & \"
+            while piece_of_code.find("\\n") != -1:
+                piece_of_code = piece_of_code.replace("\\n", "\n")
+            while piece_of_code.find("\\r") != -1:
+                piece_of_code = piece_of_code.replace("\\r", "\r")
+            while piece_of_code.find("\\\"") != -1:
+                piece_of_code = piece_of_code.replace("\\\"", "\"")
+            # remove unicode & 非ascii乱码
+            piece_of_code = piece_of_code.replace("unicode", " ")
+
+            tmp = piece_of_code
+            piece_of_code = ""
+            import random
+            for j in range(0,len(tmp)):
+                if ord(tmp[j])<0 or ord(tmp[j])>127:
+                    coin = random.randint(1, 2)
+                    if coin==1: #大写
+                        piece_of_code= piece_of_code + chr(random.randint(65, 90))
+                    else: # 小写
+                        piece_of_code= piece_of_code + chr(random.randint(97, 122))
+                else:
+                    piece_of_code = piece_of_code + tmp[j]
+
+            # while piece_of_code.find("unicode\"") != -1:
+            #     idx = piece_of_code.find("unicode\"")
+            #     idx2 = idx + len("unicode\"")
+            #     while piece_of_code[idx2] != '\"':
+            #         idx2 = idx2 + 1
+            #     str0 = piece_of_code[idx:idx2 + 1]
+            #     import random
+            #     import string
+            #     value = ''.join(random.sample(string.ascii_letters + string.digits, idx2 + 1 - idx))  # 随机字符串
+            #     piece_of_code = piece_of_code.replace(str0, value)
+
+            purecode = purecode + piece_of_code
+        purecodewritter = open("./sourcecode_{}/purecode/{}({}).txt".format(Net, name,contract_address),"w", encoding="utf-8")
+        print(purecode, file=purecodewritter)
+        purecodewritter.close()
 
         ###
         ### 3、整合并且输出本地目录可以编译的code，没有内部引用。同时生成multisol_div文件夹存放子文件
         ###
-        source_code = main_regulate_source_code(purecode, name, contract_address, Net)
         path = "./sourcecode_{}/finalcode".format(Net)
         if not os.path.exists(path):
             os.makedirs(path)
-        writter3 = open("./sourcecode_{}/finalcode/{}({}).txt".format(Net, name,contract_address),"w", encoding="utf-8")
-        print(source_code, file=writter3)
-        writter3.close()
+
+        source_code_header, source_code= main_regulate_source_code(purecode, name, contract_address, Net)
+        # 1. remove ^ in pragma solidity ^
+        # 2. comcat all.sol files
+        # 3.find compile version
+        # 4.find SPDX version
+        # final regulation. reorganize code --> content_dict.
+        # add SPDX, compile version, and import; adding contract addr !
+
+        ##################################################################
+
+        # Fix bug
+        # 还是存在contract/library乱序的问题，所以写一个re-organize: 抓取内容，重组代码
+
+        ##################################################################
+
+        newcode, content_dict, dependency, typology, codewithdoc, withdoc_content_dict = reorganize(source_code)
+        while newcode.find("\n\n\n") != -1:
+            newcode = newcode.replace("\n\n\n", "\n\n")
+        while codewithdoc.find("\n\n\n") != -1:
+            codewithdoc = codewithdoc.replace("\n\n\n", "\n\n")
+        # leave out blank line
+
+        source_code = source_code_header + newcode
+        sourcecodewritter = open("./sourcecode_{}/finalcode/{}({}).txt".format(Net, name,contract_address),"w", encoding="utf-8")
+        print(source_code, file=sourcecodewritter)
+        sourcecodewritter.close()
+
+        path = "./sourcecode_{}/CodewithDocs".format(Net)   ## 记录被省略的文档信息
+        if not os.path.exists(path):
+            os.makedirs(path)
+        source_code = source_code_header + codewithdoc
+        sourcecodewritter = open("./sourcecode_{}/CodewithDocs/{}({}).txt".format(Net, name,contract_address),"w", encoding="utf-8")
+        print(source_code, file=sourcecodewritter)
+        sourcecodewritter.close()
+
+        # if name=="ChainFactory_ERC20":
+        #     print(dependency)
+        #     print(typology)
+        #     exit(0)
     except Exception as e:
         print("Reason: ",e)
     print("【累计用时 {}/{}】：{}s".format(crtid, N, costsum))
