@@ -108,10 +108,11 @@ def reorganize(code):
     for name in content_dict.keys():
         sub = ""
         for j in range(0,len(name)):
-            if name[j]>="0"and name[j]<="9" or name[j]>="A"and name[j]<="Z" or name[j]>="a"and name[j]<="z":
+            if (name[j] >= "0" and name[j] <= "9") or (name[j] >= "A" and name[j] <= "Z") or (name[j] >= "a" and name[j] <= "z") or name[j]=="$":   # $是一个奇怪的符号
                 sub = sub + name[j]
             else:
-                continue
+                if sub=="":continue
+                break
         if len(sub)<=3:
             import random
             import string
