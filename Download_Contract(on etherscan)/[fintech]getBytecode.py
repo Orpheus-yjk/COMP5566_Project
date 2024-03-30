@@ -134,7 +134,7 @@ while True:
             # abi = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["abi"]
             abi = compiled_sol["contracts"]["{}.sol".format(shortname)][shortname]["abi"]
             data3 = open("./compiled_bytecode_abi/{}".format(Name), 'w', encoding='utf-8')
-            print(str(bytecode), file=data3)
+            print(str(abi), file=data3)
             data3.close()
         except Exception as e:
             print("FAIL!!")
