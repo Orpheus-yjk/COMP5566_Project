@@ -21,7 +21,8 @@ df = pd.read_csv('./data/export-verified-contractaddress-opensource-license({}).
 N = len(df)
 # N = 1000
 
-last_N = df[-N:].copy()
+delta = 0
+last_N = df[-N+delta:].copy()
 # 后1000条
 
 YourApiKeyToken="FQXNEMBZ59ZG95A6KKXNUIWESBUWTBT82F"
@@ -92,7 +93,7 @@ for (contract_address,name) in zip(contract_address_list, contract_names):
         crtid =crtid + 1
     except Exception as e:
         print(e)
-    print("【累计用时 {}/{}】：{}s".format(crtid, N, costsum))
+    print("累计用时 {}/{}：{}s".format(crtid, N, costsum))
 
 print("【总用时】：{}".format(costsum))
 
