@@ -18,6 +18,9 @@ failed_sol = []
 if not os.path.exists("./compiled_bytecode"):
     os.makedirs("./compiled_bytecode")
 
+if not os.path.exists("./compiled_bytecode_abi"):
+    os.makedirs("./compiled_bytecode_abi")
+
 if not os.path.exists("./successfully_compile"):
     os.makedirs("./successfully_compile")
 
@@ -126,6 +129,13 @@ while True:
             data2 = open("./successfully_compile/{}".format(Name), 'w', encoding='utf-8')
             print(source_code, file=data2)
             data2.close()
+
+            # get abi
+            # abi = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["abi"]
+            abi = compiled_sol["contracts"]["{}.sol".format(shortname)][shortname]["abi"]
+            data3 = open("./compiled_bytecode_abi/{}".format(Name), 'w', encoding='utf-8')
+            print(str(bytecode), file=data3)
+            data3.close()
         except Exception as e:
             print("FAIL!!")
             failed_sol.append(name)
@@ -136,8 +146,6 @@ while True:
             print(e, file=data)
             data.close()
 
-        # get abi
-        # abi = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["abi"]
 
         t1=time.time()
         print("编译以及输出本Contract Bytecode花费了(时间s)：{}".format(t1-t0))
