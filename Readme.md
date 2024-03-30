@@ -15,8 +15,6 @@
 
 - [x] 收集论文， 找到合同分类法
 
-  [论文 link](https://docs.qq.com/sheet/DY3pDVFhkcXFKb0dN?folder=&from_page=doc_list_new_smartsheet&templateId=31795&create_type=2&aid_position=templatemall&aid_pos=templatemall&tab=BB08J2&u=2435e4f6a686417dae3a02522c0f82eb)
-
   工具： HoneyBadger，[https://github.com/christoftorres/HoneyBadger?tab=readme-ov-file](https://github.com/christoftorres/HoneyBadger?tab=readme-ov-file)
 
 - [x] 收集以太坊上的智能合约的源代码、ABI和字节码
