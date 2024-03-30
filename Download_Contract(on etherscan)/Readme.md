@@ -1,9 +1,13 @@
 # 目录
-> 1. `readContractSourceCode.py` 选择从Mainnet/Georli/Sepolia浏览器下载5000，5000，3500条Contracts的rawcode，并且拼接成可运行的源代码(少数本地编译有问题但remix上可以编译通过)。调用获取api见：[https://docs.etherscan.io/api-endpoints/contracts](https://docs.etherscan.io/api-endpoints/contracts)。
-> 2. `readContractABI.py`  选择从Mainnet/Georli/Sepolia浏览器下载5000，5000，3500条Contracts的ABI。
-> 3. `[fintech]getBytecode.py` 本地下载的合约源代码进行编译得到bytecode。
-> 4. 其他文件：`data`内是合约地址，`utils`内是库。`[demo]reading_demo`是读取样例。
-> 这是[**_github项目地址 : https://github.com/Orpheus-yjk/COMP5566_Project/tree/main/Download_Contract(on%20etherscan)_**](https://github.com/Orpheus-yjk/COMP5566_Project/tree/main/Download_Contract(on%20etherscan) "从etherscan上读取代码")。
+> 1. `readContractSourceCode.py` 选择从Mainnet/Georli/Sepolia浏览器下载5000，5000，3500条Contracts的rawcode，并且拼接成可运行的源代码(少数本地编译有问题但remix上可以编译通过)。
+>    
+>    调用获取api见：[_https://docs.etherscan.io/api-endpoints/contracts_](https://docs.etherscan.io/api-endpoints/contracts)。
+>    
+> 3. `readContractABI.py`  选择从Mainnet/Georli/Sepolia浏览器下载5000，5000，3500条Contracts的ABI。
+> 4. `[fintech]getBytecode.py` 本地下载的合约源代码进行编译得到bytecode。
+> 5. 其他文件：`data`内是合约地址，`utils`内是库。`[demo]reading_demo`是读取样例。
+>    
+>    这是[_github项目地址 : https://github.com/Orpheus-yjk/COMP5566_Project/tree/main/Download_Contract(on%20etherscan)_](https://github.com/Orpheus-yjk/COMP5566_Project/tree/main/Download_Contract(on%20etherscan) "从etherscan上读取代码")。
 > 
 
 # 运行方法
