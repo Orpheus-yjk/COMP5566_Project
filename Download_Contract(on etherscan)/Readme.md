@@ -74,7 +74,7 @@ CodewithDocs存放原来代码。
 
 
 # 工具已经上传
-对于少数程序下载以后编译不了的合约，请手动在Remix上修改成功并采集bytecode。
+对于少数程序下载以后编译不了的合约，请查看fail_to_compile文件夹手动在Remix上修改成功并采集bytecode。
 然后将正确的代码复制回本地。
 
 
