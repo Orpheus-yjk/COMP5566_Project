@@ -85,59 +85,86 @@ while True:
 
         beg = source_code.find("pragma solidity ")
         if beg == -1:  # 没有 compile version
-            compile_version = "0.8.0" # default
+            compile_version = "0.8.0"  # default
             source_code = "pragma solidity ^" + compile_version + ";\n\n" + source_code
         else:
             compile_version = source_code[beg + 16: source_code.find(";", beg, len(source_code))]
+            while compile_version[0] == " " or compile_version[0] == "^": compile_version = compile_version[1:]
             # while compile_version[0] < '0' or compile_version[0] > '9': compile_version = compile_version[1:]
             # while compile_version[-1] < '0' or compile_version[-1] > '9': compile_version = compile_version[:-1]
 
             if compile_version.find("=") != -1:  # >= > <
                 idx = compile_version.find("=") + 1
                 sub = ""
-                while (compile_version[idx] >= "0" and compile_version[idx] <= "9") or compile_version[idx] == "." or compile_version[idx]==" ":
-                    if compile_version[idx]==" ":
-                        if len(sub)>0:break
+                while (compile_version[idx] >= "0" and compile_version[idx] <= "9") or compile_version[idx] == "." or \
+                        compile_version[idx] == " ":
+                    if compile_version[idx] == " ":
+                        if len(sub) > 0:
+                            break
                         else:
                             idx = idx + 1
                             continue
                     sub = sub + compile_version[idx]
                     idx = idx + 1
-                    if idx == len(compile_version):break
+                    if idx == len(compile_version): break
                 source_code = source_code.replace("pragma solidity ^" + compile_version, "pragma solidity ^" + sub)
-                source_code = source_code.replace("pragma solidity " + compile_version, "pragma solidity ^" + sub)   # 注意，没有尖括号
+                source_code = source_code.replace("pragma solidity " + compile_version,
+                                                  "pragma solidity ^" + sub)  # 注意，没有尖括号
                 compile_version = sub
 
             elif compile_version.find(">") != -1:
                 idx = compile_version.find(">") + 1
                 sub = ""
-                while (compile_version[idx] >= "0" and compile_version[idx] <= "9") or compile_version[idx] == "." or compile_version[idx]==" ":
-                    if compile_version[idx]==" ":
-                        if len(sub)>0:break
+                while (compile_version[idx] >= "0" and compile_version[idx] <= "9") or compile_version[idx] == "." or \
+                        compile_version[idx] == " ":
+                    if compile_version[idx] == " ":
+                        if len(sub) > 0:
+                            break
                         else:
                             idx = idx + 1
                             continue
                     sub = sub + compile_version[idx]
                     idx = idx + 1
-                    if idx == len(compile_version):break
+                    if idx == len(compile_version): break
+                id = 0
+                for j in range(0, len(all_compile_version)):
+                    if all_compile_version[j] == sub:
+                        id = j
+                id = id - 1
+                if id < 0: id = 0
+                if id == len(all_compile_version): id = len(all_compile_version) - 1
+                sub = all_compile_version[id]
                 source_code = source_code.replace("pragma solidity ^" + compile_version, "pragma solidity ^" + sub)
-                source_code = source_code.replace("pragma solidity " + compile_version, "pragma solidity ^" + sub)   # 注意，没有尖括号
+                source_code = source_code.replace("pragma solidity " + compile_version,
+                                                  "pragma solidity ^" + sub)  # 注意，没有尖括号
                 compile_version = sub
             elif compile_version.find("<") != -1:
                 idx = compile_version.find("<") + 1
                 sub = ""
-                while (compile_version[idx] >= "0" and compile_version[idx] <= "9") or compile_version[idx] == "." or compile_version[idx]==" ":
-                    if compile_version[idx]==" ":
-                        if len(sub)>0:break
+                while (compile_version[idx] >= "0" and compile_version[idx] <= "9") or compile_version[idx] == "." or \
+                        compile_version[idx] == " ":
+                    if compile_version[idx] == " ":
+                        if len(sub) > 0:
+                            break
                         else:
                             idx = idx + 1
                             continue
                     sub = sub + compile_version[idx]
                     idx = idx + 1
-                    if idx == len(compile_version):break
+                    if idx == len(compile_version): break
+                id = 0
+                for j in range(0, len(all_compile_version)):
+                    if all_compile_version[j] == sub:
+                        id = j
+                id = id + 1
+                if id < 0: id = 0
+                if id == len(all_compile_version): id = len(all_compile_version) - 1
+                sub = all_compile_version[id]
                 source_code = source_code.replace("pragma solidity ^" + compile_version, "pragma solidity ^" + sub)
-                source_code = source_code.replace("pragma solidity " + compile_version, "pragma solidity ^" + sub)   # 注意，没有尖括号
+                source_code = source_code.replace("pragma solidity " + compile_version,
+                                                  "pragma solidity ^" + sub)  # 注意，没有尖括号
                 compile_version = sub
+
             print("compile version == {}".format(compile_version))
             # pragma solidity 0.x.y; find compile version
 
