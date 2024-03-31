@@ -141,14 +141,14 @@ def main(RESTRICT_VERSION = "auto"):
                 source_code = source_code.replace("pragma solidity " + compile_version,
                                                   "pragma solidity ^" + sub)  # 注意，没有尖括号
                 compile_version = sub
-            
+
             if RESTRICT_VERSION != "auto":
                 source_code = source_code.replace("pragma solidity ^" + compile_version, "pragma solidity ^" + RESTRICT_VERSION)
                 source_code = source_code.replace("pragma solidity " + compile_version,
                                                   "pragma solidity ^" + RESTRICT_VERSION)  # 注意，没有尖括号
                 compile_version = RESTRICT_VERSION #指定版本
-                
-            
+
+
             print("compile version == {}".format(compile_version))
             # pragma solidity 0.x.y; find compile version
 
@@ -236,13 +236,15 @@ if __name__ == '__main__':
     all_compile_version=[]
     for ver in open("./allcompileversion.txt"):
         all_compile_version.append(ver[:-1]) #去掉换行符
-        
+
     while True:
         RESTRICT_VERSION = input("请输入特定编译器版本 0.x.y，或者输入autocompile根据代码自适应：")
-        if RESTRICT_VERSION in all_compile_version:
+        if (RESTRICT_VERSION in all_compile_version) or RESTRICT_VERSION=="auto":
             break
-        else:
+        else:  
             print("invalid version.")
     main(RESTRICT_VERSION)
-    
+
     halt = input("HALT")
+
+
