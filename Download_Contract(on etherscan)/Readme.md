@@ -28,6 +28,8 @@ numpy
 pandas
 requests
 web3
+random
+string
 py-solc-x
 ```
 本地使用anaconda部署python的话，打开anaconda power shell，下列是查看、添加、删除环境命令：
