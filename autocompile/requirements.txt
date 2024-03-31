@@ -1,0 +1,7 @@
+numpy
+pandas
+requests
+web3
+random
+string
+py-solc-x
